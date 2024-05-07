@@ -6,7 +6,6 @@ import { BookType } from "../types/types";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { start } from "repl";
 
 type BookProps = {
   book: BookType;
@@ -29,6 +28,11 @@ const Book = ({ book }: BookProps) => {
           body: JSON.stringify({ title: book.title, price: book.price }),
         },
       );
+      const responseData = await response.json();
+
+      if (responseData) {
+        router.push(responseData.checkout_url);
+      }
     } catch (err: any) {
       console.error(err);
     }
