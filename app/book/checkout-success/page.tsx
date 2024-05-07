@@ -20,7 +20,7 @@ const PurchaseSuccess = () => {
               body: JSON.stringify({ sessionId }),
             },
           );
-          console.log(await res.json());
+          // console.log(await res.json());
         } catch (err) {
           console.error(err);
         }
