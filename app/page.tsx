@@ -1,16 +1,16 @@
 import { getServerSession } from "next-auth";
 import Book from "./components/Book";
 import { getAllBooks } from "./lib/microcms/client";
-import { BookType } from "./types/types";
+import { BookType, Purchase, User } from "./types/types";
 import { nextAuthOptions } from "./lib/next-auth/options";
 
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
   const { contents } = await getAllBooks();
   const session = await getServerSession(nextAuthOptions);
-  const user: any = session?.user;
+  const user = session?.user as User;
 
-  let purchaseBookIds: any;
+  let purchaseBookIds: string;
 
   if (user) {
     const response = await fetch(
@@ -19,7 +19,7 @@ export default async function Home() {
     );
     const purchasesData = await response.json();
 
-    purchaseBookIds = purchasesData.map((purchaseBook: any) => {
+    purchaseBookIds = purchasesData.map((purchaseBook: Purchase) => {
       return purchaseBook.bookId;
     });
   }
