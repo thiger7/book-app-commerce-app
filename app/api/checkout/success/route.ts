@@ -27,7 +27,7 @@ export async function POST(request: Request, response: Response) {
           bookId: session.metadata?.bookId!,
         },
       });
-      return NextResponse.json(purchase);
+      return NextResponse.json({ purchase });
     } else {
       return NextResponse.json({ message: "すでに購入済みです。" });
     }
