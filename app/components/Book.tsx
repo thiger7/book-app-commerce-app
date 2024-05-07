@@ -6,6 +6,7 @@ import { BookType } from "../types/types";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { start } from "repl";
 
 type BookProps = {
   book: BookType;
@@ -17,6 +18,21 @@ const Book = ({ book }: BookProps) => {
   const { data: session } = useSession();
   const user = session?.user;
   const router = useRouter();
+
+  const startCheckout = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: book.title, price: book.price }),
+        },
+      );
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
 
   const handlePurchaseClick = () => {
     setShowModal(true);
@@ -33,6 +49,7 @@ const Book = ({ book }: BookProps) => {
       router.push("/login");
     } else {
       //Stripeで決済する
+      startCheckout();
     }
   };
 
