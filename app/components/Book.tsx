@@ -15,7 +15,7 @@ type BookProps = {
 const Book = ({ book }: BookProps) => {
   const [showModal, setShowModal] = useState(false);
   const { data: session } = useSession();
-  const user = session?.user;
+  const user: any = session?.user;
   const router = useRouter();
 
   const startCheckout = async () => {
@@ -25,7 +25,12 @@ const Book = ({ book }: BookProps) => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title: book.title, price: book.price }),
+          body: JSON.stringify({
+            title: book.title,
+            price: book.price,
+            userId: user?.id,
+            bookId: book.id,
+          }),
         },
       );
       const responseData = await response.json();
