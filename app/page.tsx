@@ -10,12 +10,18 @@ export default async function Home() {
   const session = await getServerSession(nextAuthOptions);
   const user: any = session?.user;
 
+  let purchaseBookIds: any;
+
   if (user) {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user.id}`,
+      { cache: "no-store" }, //SSR
     );
     const purchasesData = await response.json();
-    console.log(purchasesData);
+
+    purchaseBookIds = purchasesData.map((purchaseBook: any) => {
+      return purchaseBook.bookId;
+    });
   }
 
   return (
@@ -25,7 +31,11 @@ export default async function Home() {
           Book Commerce
         </h2>
         {contents.map((book: BookType) => (
-          <Book key={book.id} book={book} />
+          <Book
+            key={book.id}
+            book={book}
+            isPurchased={purchaseBookIds.includes(book.id)}
+          />
         ))}
       </main>
     </>
